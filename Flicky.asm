@@ -3047,15 +3047,15 @@ loc_11422:
 
 loc_1143a:
                 lea     ($FFFFC800).w,a0
-                moveq   #$1F,d0
-loc_11440:
-                move.b  #$C,(a0)+
-                dbf     d0,loc_11440
+                moveq   #$1F,d0 ;;for loop counter d0 = 1F
+CreateCeiling: 			;;loc_11440:
+                move.b  #$C,(a0)+ ;;Create ceiling(floor) objects (?) of level represted by C0 in RAM C800 to C81F
+                dbf     d0,CreateCeiling
                 lea     ($FFFFCB40).w,a0
-                moveq   #$3F,d0
-loc_1144E:
+                moveq   #$3F,d0 ;;for loop counter d0 = 3F
+CreateFloor:			;;loc_1144e
                 move.b  #$C,(a0)+
-                dbf     d0,loc_1144e
+                dbf     d0,CreateFloor ;;Create floor objects(?) of level in ram starting at CB40 to CB7E
                 lea     ($FFFFC840).w,a0
                 moveq   #$1F,d0
 loc_1145C:
