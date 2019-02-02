@@ -2998,15 +2998,27 @@ loc_113CE:
                 rts
 
 ; ======================================================================
-; TODO - This makes no sense.
+; TODO - I believe this is for loading level platforms into ram
+;	(need to check more through this)
+;	game treats binary level data for platforms as follows
+;
+;	bit 7 determines solid or air tiles
+;	if solid bit 6 determines if tiles are horizontal or vertical
+;	if solid bits 5-0 are amount of tiles
+;	if air bits 6-0 are amount of empty tiles
+;	
+;	0x86 makes a 6 tile horizontal platform
+;	0xC6 makes a 6 tile vertical wall
+;	
+;
 loc_113e4:
                 bsr.s   ClearBonusObjectRAM
-                lea     ($FFFFC840).w,a0
+                lea     ($FFFFC840).w,a0	;starting intial position for level platforms
 loc_113ea:
                 moveq   #0,d7
                 move.b  (a6)+,d7
-                beq.s   loc_113fa
-                bclr    #7,d7
+                beq.s   loc_113fa		;once a 0x00 is read from ROM we are done loading platform data
+                bclr    #7,d7			;check 7th bit of d7  if on sets tile to solid, else air
                 bne.s   loc_113fc
                 adda.l  d7,a0
                 bra.s   loc_113ea
@@ -3014,7 +3026,7 @@ loc_113fa:
                 rts
 
 loc_113fc:
-                bclr    #6,d7
+                bclr    #6,d7			;check 6th bit if on place tiles vertically else tiles get placed horiz
                 bne.s   loc_1140e
                 subq.b  #1,d7
 loc_11404:
@@ -3033,7 +3045,7 @@ loc_11412:
 
 ; ======================================================================
 
-loc_11422:
+loc_11422:	;;init all level objects to ram
                 bsr.s   loc_113e4                ; TODO
                 bsr.s   loc_1148a
                 bsr.w   loc_119c0
